@@ -1,14 +1,66 @@
-import { Typography } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  styled,
+  Typography,
+} from "@mui/material";
 import "./App.css";
 import GameBoard from "./components/GameBoard";
+import useGame from "./hooks/useGame";
+import { GameMode, GameModeInfo } from "./utils/enums";
+
+const GameBoardContainer = styled("div")(({ theme }) => ({
+  backgroundColor: "#F5F5F5",
+  borderRadius: theme.spacing(2),
+  padding: theme.spacing(4),
+  display: "grid",
+  gap: theme.spacing(2),
+  alignItems: "center",
+}));
 
 function App() {
+  const { selectedGameMode, updateGameMode, gameStarted, startGame } =
+    useGame();
+
   return (
     <>
       <Typography variant="h3" gutterBottom>
         Game of Tenzi
       </Typography>
-      <GameBoard />
+      <GameBoardContainer>
+        {!gameStarted && (
+          <>
+            <Typography variant="h5" gutterBottom color="textPrimary">
+              Select a Game Mode
+            </Typography>
+            <FormControl fullWidth>
+              <InputLabel>Game Mode</InputLabel>
+              <Select
+                value={selectedGameMode}
+                label="Game Mode"
+                onChange={(e) => updateGameMode(e.target.value as GameMode)}
+              >
+                <MenuItem value={""} disabled selected>
+                  Select a mode
+                </MenuItem>
+                {Object.entries(GameModeInfo).map(([modeKey, modeInfo]) => (
+                  <MenuItem key={modeKey} value={modeKey}>
+                    {modeInfo.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Button variant="contained" onClick={startGame}>
+              Start Game
+            </Button>
+          </>
+        )}
+
+        {gameStarted && <GameBoard />}
+      </GameBoardContainer>
     </>
   );
 }

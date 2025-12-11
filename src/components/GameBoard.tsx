@@ -1,43 +1,44 @@
-import { Button, styled } from "@mui/material";
+import { Button, styled, Typography } from "@mui/material";
 import useGame from "../hooks/useGame";
 import Die from "./Die";
 
-const GameBoardContainer = styled("div")(({ theme }) => ({
-  backgroundColor: "#F5F5F5",
-  borderRadius: theme.spacing(2),
-  padding: theme.spacing(4),
+const DiceBoard = styled("div")(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "repeat(5, 1fr)",
   gap: theme.spacing(2),
-  alignItems: "center",
 }));
 
 function GameBoard() {
-  const { dice, holdDie, won, rollDice, startNewGame } = useGame();
+  const { dice, holdDie, won, rollDice, resetGame, rollCount } = useGame();
 
   return (
-    <GameBoardContainer>
-      {dice.map((die) => (
-        <Die
-          key={die.id}
-          die={die}
-          holdDie={() => {
-            if (!won) {
-              holdDie(die.id);
-            }
-          }}
-        />
-      ))}
+    <>
+      <Typography variant="h4" color="textPrimary">
+        Roll Count: {rollCount}
+      </Typography>
+      <DiceBoard>
+        {dice.map((die) => (
+          <Die
+            key={die.id}
+            die={die}
+            holdDie={() => {
+              if (!won) {
+                holdDie(die.id);
+              }
+            }}
+          />
+        ))}
+      </DiceBoard>
       {!won ? (
         <Button variant="contained" onClick={rollDice}>
           Roll
         </Button>
       ) : (
-        <Button variant="contained" onClick={startNewGame}>
+        <Button variant="contained" onClick={resetGame}>
           New Game
         </Button>
       )}
-    </GameBoardContainer>
+    </>
   );
 }
 

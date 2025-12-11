@@ -1,5 +1,5 @@
 import { styled } from "@mui/material";
-import type { IDie } from "../hooks/useGame";
+import type { IDie } from "../utils/interfaces";
 
 const DieStyled = styled("div")<{ isHeld: boolean }>(({ isHeld, theme }) => ({
   color: "black",
