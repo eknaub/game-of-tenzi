@@ -20,7 +20,13 @@ interface DieProps {
 
 function Die(props: Readonly<DieProps>) {
   return (
-    <DieStyled isHeld={props.die.isHeld} onClick={props.holdDie}>
+    <DieStyled
+      isHeld={props.die.isHeld}
+      onClick={props.holdDie}
+      aria-label={`Die with value ${props.die.value}, ${
+        props.die.isHeld ? "held" : "not held"
+      }`}
+    >
       {props.die.value}
     </DieStyled>
   );

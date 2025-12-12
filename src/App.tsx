@@ -45,18 +45,32 @@ function App() {
                 value={selectedGameMode}
                 label="Game Mode"
                 onChange={(e) => updateGameMode(e.target.value as GameMode)}
+                aria-label="Select game mode"
               >
-                <MenuItem value={""} disabled selected>
+                <MenuItem
+                  value={""}
+                  disabled
+                  selected
+                  aria-label="Select a mode"
+                >
                   Select a mode
                 </MenuItem>
                 {Object.entries(GameModeInfo).map(([modeKey, modeInfo]) => (
-                  <MenuItem key={modeKey} value={modeKey}>
+                  <MenuItem
+                    key={modeKey}
+                    value={modeKey}
+                    aria-label={`Game mode ${modeInfo.name}`}
+                  >
                     {modeInfo.name}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-            <Button variant="contained" onClick={startGame}>
+            <Button
+              variant="contained"
+              onClick={startGame}
+              aria-label="Start the game"
+            >
               Start Game
             </Button>
           </>

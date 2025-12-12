@@ -3,14 +3,18 @@ import type { IDie } from "../utils/interfaces";
 import type { GameMode } from "../utils/enums";
 import {
   checkClassicWin,
+  checkHighRollerWin,
+  checkLowRollerWin,
   generateRandomDiceArray,
 } from "../hooks/useGameHelper";
 
 type GameState = {
   dice: IDie[];
   rollCount: number;
-  selectedGameMode: string | GameMode;
+  selectedGameMode: GameMode | "";
   gameStarted: boolean;
+  secondsElapsed: number;
+  incrementSecondsElapsed: () => void;
   holdDie: (id: string) => void;
   rollDice: () => void;
   startGame: () => void;
@@ -24,6 +28,10 @@ export const useGameStore = create<GameState>((set, get) => ({
   rollCount: 0,
   selectedGameMode: "",
   gameStarted: false,
+  secondsElapsed: 0,
+  incrementSecondsElapsed: () => {
+    set((state) => ({ secondsElapsed: state.secondsElapsed + 1 }));
+  },
   holdDie: (id: string) => {
     set((state) => ({
       dice: state.dice.map((die) =>
@@ -40,15 +48,23 @@ export const useGameStore = create<GameState>((set, get) => ({
     }));
   },
   startGame: () => {
-    set({ gameStarted: true, rollCount: 0, dice: generateRandomDiceArray() });
+    const { selectedGameMode } = get();
+    const diceCount = selectedGameMode === "MEGA_TENZI" ? 20 : 10;
+    set({
+      gameStarted: true,
+      rollCount: 0,
+      dice: generateRandomDiceArray(diceCount),
+      secondsElapsed: 0,
+    });
   },
   updateGameMode: (mode: GameMode) => {
     set({ selectedGameMode: mode });
   },
   resetGame: () => {
     set({
-      dice: generateRandomDiceArray(),
+      dice: [],
       rollCount: 0,
+      secondsElapsed: 0,
       selectedGameMode: "",
       gameStarted: false,
     });
@@ -57,7 +73,12 @@ export const useGameStore = create<GameState>((set, get) => ({
     const { dice, selectedGameMode } = get();
     switch (selectedGameMode) {
       case "STANDARD":
+      case "MEGA_TENZI":
         return checkClassicWin(dice);
+      case "HIGH_ROLLER":
+        return checkHighRollerWin(dice);
+      case "LOW_ROLLER":
+        return checkLowRollerWin(dice);
       default:
         return false;
     }
