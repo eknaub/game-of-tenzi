@@ -15,7 +15,7 @@ export type GameMode = (typeof GameMode)[keyof typeof GameMode];
 export const GameModeInfo = {
   [GameMode.STANDARD]: {
     name: "Standard Tenzi",
-    description: "Roll until all dice show the same number.",
+    description: "Roll and hold until all dice show the same number.",
     category: GameModeCategories.classicSpeedy,
   },
 };

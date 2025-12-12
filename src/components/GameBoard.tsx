@@ -1,6 +1,6 @@
 import { Button, styled, Typography } from "@mui/material";
-import useGame from "../hooks/useGame";
 import Die from "./Die";
+import { useGameStore } from "../stores/useGameStore";
 
 const DiceBoard = styled("div")(({ theme }) => ({
   display: "grid",
@@ -9,11 +9,12 @@ const DiceBoard = styled("div")(({ theme }) => ({
 }));
 
 function GameBoard() {
-  const { dice, holdDie, won, rollDice, resetGame, rollCount } = useGame();
+  const { dice, holdDie, rollDice, resetGame, rollCount } = useGameStore();
+  const won = useGameStore((state) => state.hasUserWon());
 
   return (
     <>
-      <Typography variant="h4" color="textPrimary">
+      <Typography variant="h6" color="textPrimary">
         Roll Count: {rollCount}
       </Typography>
       <DiceBoard>

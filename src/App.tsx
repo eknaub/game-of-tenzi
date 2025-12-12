@@ -9,8 +9,9 @@ import {
 } from "@mui/material";
 import "./App.css";
 import GameBoard from "./components/GameBoard";
-import useGame from "./hooks/useGame";
 import { GameMode, GameModeInfo } from "./utils/enums";
+import GameInfoBox from "./components/GameInfoBox";
+import { useGameStore } from "./stores/useGameStore";
 
 const GameBoardContainer = styled("div")(({ theme }) => ({
   backgroundColor: "#F5F5F5",
@@ -23,13 +24,15 @@ const GameBoardContainer = styled("div")(({ theme }) => ({
 
 function App() {
   const { selectedGameMode, updateGameMode, gameStarted, startGame } =
-    useGame();
+    useGameStore();
 
   return (
     <>
-      <Typography variant="h3" gutterBottom>
-        Game of Tenzi
-      </Typography>
+      {!gameStarted && (
+        <Typography variant="h3" gutterBottom>
+          Game of Tenzi
+        </Typography>
+      )}
       <GameBoardContainer>
         {!gameStarted && (
           <>
@@ -58,8 +61,12 @@ function App() {
             </Button>
           </>
         )}
-
-        {gameStarted && <GameBoard />}
+        {gameStarted && (
+          <>
+            <GameInfoBox />
+            <GameBoard />
+          </>
+        )}
       </GameBoardContainer>
     </>
   );
