@@ -2,7 +2,6 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
-  styled,
   Typography,
 } from "@mui/material";
 import {
@@ -11,17 +10,6 @@ import {
   GameModifierInfo,
 } from "../utils/gameModifierEnums";
 import { useGameStore } from "../stores/useGameStore";
-
-const GameModifierContainer = styled("div")(({ theme }) => ({
-  backgroundColor: "#FAFAFA",
-  color: "black",
-  borderRadius: theme.spacing(2),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[2],
-  display: "flex",
-  flexDirection: "column",
-  gap: theme.spacing(2),
-}));
 
 function GameModifierBox() {
   const { toggleModifier } = useGameStore();
@@ -33,9 +21,10 @@ function GameModifierBox() {
   );
 
   return (
-    <GameModifierContainer>
+    <div>
       <Typography
-        variant="h6"
+        variant="h5"
+        gutterBottom
         color="textPrimary"
         style={{
           textAlign: "center",
@@ -117,7 +106,7 @@ function GameModifierBox() {
           </FormGroup>
         </>
       )}
-    </GameModifierContainer>
+    </div>
   );
 }
 

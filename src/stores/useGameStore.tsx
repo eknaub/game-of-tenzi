@@ -34,7 +34,7 @@ type GameState = {
   resetGame: () => void;
   hasUserWon: () => boolean;
   calculateAndSetScore: () => void;
-  getHeaderText: () => string;
+  getGameInformation: () => string;
   restartGame: () => void;
   selectedModifiers: GameModifier[];
   toggleModifier: (modifier: GameModifier) => void;
@@ -135,7 +135,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       set({ score });
     }
   },
-  getHeaderText: () => {
+  getGameInformation: () => {
     const { rollCount, secondsElapsed, selectedGameMode } = get();
     const selectedGameModeNeedsTimer = selectedGameMode === "SPEED_TENZI";
 

@@ -3,3 +3,12 @@ export interface IDie {
   value: number;
   isHeld: boolean;
 }
+
+export interface ILeaderboardEntry {
+  name: string;
+  score: number;
+}
+
+export interface ILeaderboard {
+  entries: ILeaderboardEntry[];
+}
