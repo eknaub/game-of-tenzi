@@ -10,9 +10,10 @@ import {
 } from "@mui/material";
 import "./App.css";
 import GameBoard from "./components/GameBoard";
-import { GameMode, GameModeCategories, GameModeInfo } from "./utils/enums";
+import { GameMode, GameModeInfo } from "./utils/gameModeEnums";
 import GameInfoBox from "./components/GameInfoBox";
 import { useGameStore } from "./stores/useGameStore";
+import GameModifierBox from "./components/GameModifierBox";
 
 const GameBoardContainer = styled("div")(({ theme }) => ({
   backgroundColor: "#F5F5F5",
@@ -32,8 +33,14 @@ const StyledListSubheader = styled(ListSubheader)(({ theme }) => ({
 }));
 
 function App() {
-  const { selectedGameMode, updateGameMode, gameStarted, startGame } =
-    useGameStore();
+  const {
+    selectedGameMode,
+    updateGameMode,
+    gameStarted,
+    startGame,
+    targetNumber,
+    setTargetNumber,
+  } = useGameStore();
 
   const groupedModes = Object.entries(GameModeInfo).reduce(
     (acc, [modeKey, modeInfo]) => {
@@ -46,6 +53,16 @@ function App() {
     {} as Record<string, [string, (typeof GameModeInfo)[GameMode]][]>
   );
 
+  const isNewGameDisabled = () => {
+    switch (selectedGameMode) {
+      case "TARGET_TENZI": {
+        return selectedGameMode === "TARGET_TENZI" && targetNumber === 0;
+      }
+      default:
+        return selectedGameMode === "";
+    }
+  };
+
   return (
     <>
       {!gameStarted && (
@@ -56,7 +73,14 @@ function App() {
       <GameBoardContainer>
         {!gameStarted && (
           <>
-            <Typography variant="h5" gutterBottom color="textPrimary">
+            <Typography
+              variant="h5"
+              gutterBottom
+              color="textPrimary"
+              style={{
+                textAlign: "center",
+              }}
+            >
               Select a Game Mode
             </Typography>
             <FormControl fullWidth>
@@ -64,7 +88,7 @@ function App() {
               <Select
                 value={selectedGameMode}
                 label="Game Mode"
-                onChange={(e) => updateGameMode(e.target.value as GameMode)}
+                onChange={(e) => updateGameMode(e.target.value)}
                 aria-label="Select game mode"
               >
                 {Object.entries(groupedModes).map(([category, modes]) => [
@@ -83,11 +107,33 @@ function App() {
                 ])}
               </Select>
             </FormControl>
+            {selectedGameMode === "TARGET_TENZI" && (
+              <FormControl fullWidth>
+                <InputLabel>Select target number</InputLabel>
+                <Select
+                  value={targetNumber}
+                  label="Target number"
+                  onChange={(e) => setTargetNumber(e.target.value)}
+                  aria-label="Select target mode for game mode"
+                >
+                  {[1, 2, 3, 4, 5, 6].map((num) => (
+                    <MenuItem
+                      key={num}
+                      value={num}
+                      aria-label={`Target number ${num}`}
+                    >
+                      {num}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+            <GameModifierBox />
             <Button
               variant="contained"
               onClick={startGame}
               aria-label="Start the game"
-              disabled={selectedGameMode === ""}
+              disabled={isNewGameDisabled()}
             >
               Start Game
             </Button>

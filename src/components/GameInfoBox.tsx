@@ -1,6 +1,6 @@
 import { styled, Typography } from "@mui/material";
 import { useGameStore } from "../stores/useGameStore";
-import { GameMode, GameModeInfo } from "../utils/enums";
+import { GameMode, GameModeInfo } from "../utils/gameModeEnums";
 
 const GameInfoBoxContainer = styled("div")(({ theme }) => ({
   backgroundColor: "#FAFAFA",

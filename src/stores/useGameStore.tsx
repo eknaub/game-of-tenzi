@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import type { IDie } from "../utils/interfaces";
-import type { GameMode } from "../utils/enums";
+import type { GameMode } from "../utils/gameModeEnums";
 import {
+  calculateCompetitiveScore,
   checkClassicWin,
   checkHighRollerWin,
   checkLowRollerWin,
@@ -10,11 +11,17 @@ import {
   checkPairsOnlyWin,
   checkPyramidWin,
   checkSplitziWin,
+  checkTargetSumWin,
+  checkTargetWin,
   generateRandomDiceArray,
 } from "../hooks/useGameHelper";
+import { GameModifier } from "../utils/gameModifierEnums";
 
 type GameState = {
   dice: IDie[];
+  score: number; //used for competitive mode to hold score
+  targetNumber: number; //used for target number gamemode
+  setTargetNumber: (val: number) => void;
   rollCount: number;
   selectedGameMode: GameMode | "";
   gameStarted: boolean;
@@ -26,11 +33,22 @@ type GameState = {
   updateGameMode: (mode: GameMode) => void;
   resetGame: () => void;
   hasUserWon: () => boolean;
+  calculateAndSetScore: () => void;
   getHeaderText: () => string;
+  restartGame: () => void;
+  selectedModifiers: GameModifier[];
+  toggleModifier: (modifier: GameModifier) => void;
 };
 
 export const useGameStore = create<GameState>((set, get) => ({
   dice: [],
+  score: 0,
+  targetNumber: 0,
+  setTargetNumber: (val: number) => {
+    set(() => ({
+      targetNumber: val,
+    }));
+  },
   rollCount: 0,
   selectedGameMode: "",
   gameStarted: false,
@@ -76,7 +94,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     });
   },
   hasUserWon: () => {
-    const { dice, selectedGameMode } = get();
+    const { dice, selectedGameMode, targetNumber } = get();
     switch (selectedGameMode) {
       case "STANDARD":
       case "MEGA_TENZI":
@@ -96,8 +114,25 @@ export const useGameStore = create<GameState>((set, get) => ({
         return checkPairsOnlyWin(dice);
       case "PYRAMID":
         return checkPyramidWin(dice);
+      case "TARGET_TENZI":
+        return checkTargetWin(dice, targetNumber);
+      case "TARGET_SUM":
+        return checkTargetSumWin(dice);
       default:
         return false;
+    }
+  },
+  calculateAndSetScore: () => {
+    const { selectedModifiers, rollCount, secondsElapsed, selectedGameMode } =
+      get();
+    if (selectedModifiers.includes(GameModifier.COMPETITIVE_MODE)) {
+      const score = calculateCompetitiveScore(
+        selectedModifiers,
+        rollCount,
+        secondsElapsed,
+        selectedGameMode
+      );
+      set({ score });
     }
   },
   getHeaderText: () => {
@@ -107,5 +142,20 @@ export const useGameStore = create<GameState>((set, get) => ({
     return `Rolls: ${rollCount} ${
       selectedGameModeNeedsTimer ? `| ${secondsElapsed}s` : ""
     }`;
+  },
+  restartGame: () => {
+    set({
+      dice: generateRandomDiceArray(),
+      rollCount: 0,
+      secondsElapsed: 0,
+    });
+  },
+  selectedModifiers: [],
+  toggleModifier: (modifier: GameModifier) => {
+    set((state) => ({
+      selectedModifiers: state.selectedModifiers.includes(modifier)
+        ? state.selectedModifiers.filter((m) => m !== modifier)
+        : [...state.selectedModifiers, modifier],
+    }));
   },
 }));

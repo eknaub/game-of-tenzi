@@ -1,3 +1,5 @@
+import { GameModeInfo, type GameMode } from "../utils/gameModeEnums";
+import { GameModifier, GameModifierInfo } from "../utils/gameModifierEnums";
 import type { IDie } from "../utils/interfaces";
 
 export const generateRandomDiceArray = (diceCount?: number): IDie[] => {
@@ -116,4 +118,51 @@ export const checkPyramidWin = (dice: IDie[]): boolean => {
     counterMap.get(4) === 4;
 
   return hasWon;
+};
+
+export const checkTargetWin = (dice: IDie[], target: number): boolean => {
+  return dice.every((die) => die.isHeld && die.value === target);
+};
+
+export const checkTargetSumWin = (dice: IDie[]): boolean => {
+  const sum = dice.reduce((acc, die) => acc + die.value, 0);
+  return dice.every((die) => die.isHeld) && sum === 30;
+};
+
+export const calculateCompetitiveScore = (
+  selectedModifiers: GameModifier[],
+  rollCount: number,
+  secondsElapsed: number,
+  selectedGameMode: GameMode | ""
+): number => {
+  const isCompetitiveModeActivated = selectedModifiers.includes(
+    GameModifier.COMPETITIVE_MODE
+  );
+
+  if (!isCompetitiveModeActivated) {
+    return 0;
+  }
+
+  let points = GameModifierInfo.COMPETITIVE_MODE.score; //Base win score
+
+  //Competitive scores (roll and time efficiency)
+  points += 200 - rollCount * 5 - secondsElapsed * 2;
+
+  //Modifier scores
+  if (selectedModifiers.includes(GameModifier.ECONOMY) && rollCount < 15) {
+    points += GameModifierInfo.ECONOMY.score;
+  }
+  if (selectedModifiers.includes(GameModifier.GIGA_ECONOMY) && rollCount < 10) {
+    points += GameModifierInfo.GIGA_ECONOMY.score;
+  }
+  if (selectedModifiers.includes(GameModifier.NO_REROLLS)) {
+    points += GameModifierInfo.NO_REROLLS.score;
+  }
+
+  //Game mode scores
+  if (selectedGameMode) {
+    points += GameModeInfo[selectedGameMode].score;
+  }
+
+  return points;
 };

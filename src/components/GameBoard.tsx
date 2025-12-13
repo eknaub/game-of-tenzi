@@ -3,6 +3,7 @@ import Die from "./Die";
 import { useGameStore } from "../stores/useGameStore";
 import { useEffect } from "react";
 import GameResultDialog from "../shared/components/GameResultDialog";
+import { GameModifier } from "../utils/gameModifierEnums";
 
 const DiceBoard = styled("div")(({ theme }) => ({
   display: "grid",
@@ -20,10 +21,21 @@ function GameBoard() {
     secondsElapsed,
     incrementSecondsElapsed,
     selectedGameMode,
+    restartGame,
+    selectedModifiers,
+    score,
+    calculateAndSetScore,
   } = useGameStore();
   const won = useGameStore((state) => state.hasUserWon());
   const headerText = useGameStore((state) => state.getHeaderText());
   const selectedGameModeNeedsTimer = selectedGameMode === "SPEED_TENZI";
+  const isUnholdDisabled = selectedModifiers.includes(GameModifier.NO_REROLLS);
+
+  useEffect(() => {
+    if (won) {
+      calculateAndSetScore();
+    }
+  }, [won, calculateAndSetScore]);
 
   useEffect(() => {
     if (!selectedGameModeNeedsTimer) return;
@@ -37,16 +49,30 @@ function GameBoard() {
     return () => clearInterval(interval);
   }, [won, incrementSecondsElapsed, selectedGameModeNeedsTimer]);
 
-  const gameResultText = selectedGameModeNeedsTimer
-    ? `Completed in ${rollCount} rolls and ${secondsElapsed} seconds!`
-    : `Completed in ${rollCount} rolls!`;
+  const getGameResultText = () => {
+    const isCompetitiveMode = selectedModifiers.includes(
+      GameModifier.COMPETITIVE_MODE
+    );
+
+    if (isCompetitiveMode) {
+      return `Score: ${score} pts | ${rollCount} rolls${
+        selectedGameModeNeedsTimer ? ` | ${secondsElapsed}s` : ""
+      }`;
+    }
+
+    if (selectedGameModeNeedsTimer) {
+      return `Completed in ${rollCount} rolls and ${secondsElapsed} seconds!`;
+    }
+
+    return `Completed in ${rollCount} rolls!`;
+  };
 
   return (
     <>
       <GameResultDialog
         open={won}
         title="🎉 You Won!"
-        message={gameResultText}
+        message={getGameResultText()}
         buttonText="Play Again"
         handleClose={resetGame}
       />
@@ -59,6 +85,10 @@ function GameBoard() {
             key={die.id}
             die={die}
             holdDie={() => {
+              if (die.isHeld && isUnholdDisabled) {
+                return;
+              }
+
               if (!won) {
                 holdDie(die.id);
               }
@@ -67,13 +97,22 @@ function GameBoard() {
         ))}
       </DiceBoard>
       {!won && (
-        <Button
-          variant="contained"
-          onClick={rollDice}
-          aria-label="Roll new dice"
-        >
-          Roll
-        </Button>
+        <>
+          <Button
+            variant="contained"
+            onClick={rollDice}
+            aria-label="Roll new dice"
+          >
+            Roll
+          </Button>
+          <Button
+            variant="contained"
+            onClick={restartGame}
+            aria-label="Restart game"
+          >
+            Restart
+          </Button>
+        </>
       )}
     </>
   );
