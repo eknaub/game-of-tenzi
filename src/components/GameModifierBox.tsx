@@ -2,6 +2,7 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
+  styled,
   Typography,
 } from "@mui/material";
 import {
@@ -10,6 +11,18 @@ import {
   GameModifierInfo,
 } from "../utils/gameModifierEnums";
 import { useGameStore } from "../stores/useGameStore";
+
+const ModifierBoxContainer = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: theme.spacing(1),
+}));
+
+const FormGroupContainer = styled(FormGroup)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: theme.spacing(1),
+}));
 
 function GameModifierBox() {
   const { toggleModifier } = useGameStore();
@@ -21,7 +34,7 @@ function GameModifierBox() {
   );
 
   return (
-    <div>
+    <ModifierBoxContainer>
       <Typography
         variant="h5"
         gutterBottom
@@ -41,7 +54,7 @@ function GameModifierBox() {
       >
         {GameModifierCategories.competitive}
       </Typography>
-      <FormGroup>
+      <FormGroupContainer>
         <FormControlLabel
           control={
             <Checkbox
@@ -53,9 +66,18 @@ function GameModifierBox() {
               aria-label="Competitive Mode Checkbox"
             />
           }
-          label={GameModifierInfo.COMPETITIVE_MODE.name}
+          label={
+            <div>
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {GameModifierInfo.COMPETITIVE_MODE.name}
+              </Typography>
+              <Typography variant="subtitle2" color="textSecondary">
+                {GameModifierInfo.COMPETITIVE_MODE.description}
+              </Typography>
+            </div>
+          }
         />
-      </FormGroup>
+      </FormGroupContainer>
       {isCompModeActivated && (
         <>
           <Typography
@@ -67,7 +89,7 @@ function GameModifierBox() {
           >
             {GameModifierCategories.rollLimits}
           </Typography>
-          <FormGroup>
+          <FormGroupContainer>
             <FormControlLabel
               control={
                 <Checkbox
@@ -77,7 +99,16 @@ function GameModifierBox() {
                   aria-label="Economy Mode Checkbox"
                 />
               }
-              label={GameModifierInfo.ECONOMY.name}
+              label={
+                <div>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    {GameModifierInfo.ECONOMY.name}
+                  </Typography>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {GameModifierInfo.ECONOMY.description}
+                  </Typography>
+                </div>
+              }
             />
             <FormControlLabel
               control={
@@ -90,7 +121,16 @@ function GameModifierBox() {
                   aria-label="Giga Economy Mode Checkbox"
                 />
               }
-              label={GameModifierInfo.GIGA_ECONOMY.name}
+              label={
+                <div>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    {GameModifierInfo.GIGA_ECONOMY.name}
+                  </Typography>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {GameModifierInfo.GIGA_ECONOMY.description}
+                  </Typography>
+                </div>
+              }
             />
             <FormControlLabel
               control={
@@ -101,12 +141,21 @@ function GameModifierBox() {
                   aria-label="No Rerolls Checkbox"
                 />
               }
-              label={GameModifierInfo.NO_REROLLS.name}
+              label={
+                <div>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    {GameModifierInfo.NO_REROLLS.name}
+                  </Typography>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {GameModifierInfo.NO_REROLLS.description}
+                  </Typography>
+                </div>
+              }
             />
-          </FormGroup>
+          </FormGroupContainer>
         </>
       )}
-    </div>
+    </ModifierBoxContainer>
   );
 }
 

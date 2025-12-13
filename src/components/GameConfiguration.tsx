@@ -34,6 +34,7 @@ function GameConfiguration() {
     targetNumber,
     setTargetNumber,
   } = useGameStore();
+  const gameModeInfo = GameModeInfo[selectedGameMode as GameMode];
 
   const groupedModes = Object.entries(GameModeInfo).reduce(
     (acc, [modeKey, modeInfo]) => {
@@ -92,6 +93,18 @@ function GameConfiguration() {
             )),
           ])}
         </Select>
+        {selectedGameMode && (
+          <Typography
+            variant="body2"
+            color="textPrimary"
+            style={{
+              fontStyle: "italic",
+              marginLeft: 8,
+            }}
+          >
+            {gameModeInfo.description}
+          </Typography>
+        )}
       </FormControl>
       {selectedGameMode === "TARGET_TENZI" && (
         <FormControl fullWidth>

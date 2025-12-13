@@ -7,11 +7,17 @@ import { GameModifier } from "../utils/gameModifierEnums";
 import { GameMode, GameModeInfo } from "../utils/gameModeEnums";
 import GameModeInfoPopover from "./GameModeInfoPopover";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
+import AddToLeaderboardDialog from "../shared/components/AddToLeaderboardDialog";
 
 const DiceBoard = styled("div")(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "repeat(5, 1fr)",
   gap: theme.spacing(2),
+  [theme.breakpoints.down("sm")]: {
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: theme.spacing(1.2),
+    padding: theme.spacing(1),
+  },
 }));
 
 const Header = styled("div")(({ theme }) => ({
@@ -58,6 +64,9 @@ function GameBoard() {
   const currentGameInfo = useGameStore((state) => state.getGameInformation());
   const selectedGameModeNeedsTimer = selectedGameMode === "SPEED_TENZI";
   const isUnholdDisabled = selectedModifiers.includes(GameModifier.NO_REROLLS);
+  const isCompetitiveMode = selectedModifiers.includes(
+    GameModifier.COMPETITIVE_MODE
+  );
 
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(
     null
@@ -91,10 +100,6 @@ function GameBoard() {
   }, [won, incrementSecondsElapsed, selectedGameModeNeedsTimer]);
 
   const getGameResultText = () => {
-    const isCompetitiveMode = selectedModifiers.includes(
-      GameModifier.COMPETITIVE_MODE
-    );
-
     if (isCompetitiveMode) {
       return `Score: ${score} pts | ${rollCount} rolls${
         selectedGameModeNeedsTimer ? ` | ${secondsElapsed}s` : ""
@@ -110,13 +115,18 @@ function GameBoard() {
 
   return (
     <GameBoardContainer>
-      <GameResultDialog
-        open={won}
-        title="🎉 You Won!"
-        message={getGameResultText()}
-        buttonText="Play Again"
-        handleClose={resetGame}
-      />
+      {!isCompetitiveMode && (
+        <GameResultDialog
+          open={won}
+          title="🎉 You Won!"
+          message={getGameResultText()}
+          buttonText="Play Again"
+          handleClose={resetGame}
+        />
+      )}
+      {isCompetitiveMode && (
+        <AddToLeaderboardDialog handleClose={resetGame} open={won} />
+      )}
       <Header>
         <Typography variant="h4" color="textPrimary">
           {gameModeInfo.name}

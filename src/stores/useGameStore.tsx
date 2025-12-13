@@ -91,6 +91,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       secondsElapsed: 0,
       selectedGameMode: "",
       gameStarted: false,
+      selectedModifiers: [],
     });
   },
   hasUserWon: () => {
