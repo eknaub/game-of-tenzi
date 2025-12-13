@@ -22,6 +22,7 @@ function GameBoard() {
     selectedGameMode,
   } = useGameStore();
   const won = useGameStore((state) => state.hasUserWon());
+  const headerText = useGameStore((state) => state.getHeaderText());
   const selectedGameModeNeedsTimer = selectedGameMode === "SPEED_TENZI";
 
   useEffect(() => {
@@ -35,10 +36,6 @@ function GameBoard() {
 
     return () => clearInterval(interval);
   }, [won, incrementSecondsElapsed, selectedGameModeNeedsTimer]);
-
-  const headerText = `Rolls: ${rollCount} ${
-    selectedGameModeNeedsTimer ? `| ${secondsElapsed}s` : ""
-  }`;
 
   const gameResultText = selectedGameModeNeedsTimer
     ? `Completed in ${rollCount} rolls and ${secondsElapsed} seconds!`

@@ -5,6 +5,11 @@ import {
   checkClassicWin,
   checkHighRollerWin,
   checkLowRollerWin,
+  checkMissingziWin,
+  checkOddEvenWin,
+  checkPairsOnlyWin,
+  checkPyramidWin,
+  checkSplitziWin,
   generateRandomDiceArray,
 } from "../hooks/useGameHelper";
 
@@ -21,6 +26,7 @@ type GameState = {
   updateGameMode: (mode: GameMode) => void;
   resetGame: () => void;
   hasUserWon: () => boolean;
+  getHeaderText: () => string;
 };
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -74,13 +80,32 @@ export const useGameStore = create<GameState>((set, get) => ({
     switch (selectedGameMode) {
       case "STANDARD":
       case "MEGA_TENZI":
+      case "SPEED_TENZI":
         return checkClassicWin(dice);
       case "HIGH_ROLLER":
         return checkHighRollerWin(dice);
       case "LOW_ROLLER":
         return checkLowRollerWin(dice);
+      case "SPLITZI":
+        return checkSplitziWin(dice);
+      case "ODD_EVEN":
+        return checkOddEvenWin(dice);
+      case "MISSINGZI":
+        return checkMissingziWin(dice);
+      case "PAIRS_ONLY":
+        return checkPairsOnlyWin(dice);
+      case "PYRAMID":
+        return checkPyramidWin(dice);
       default:
         return false;
     }
+  },
+  getHeaderText: () => {
+    const { rollCount, secondsElapsed, selectedGameMode } = get();
+    const selectedGameModeNeedsTimer = selectedGameMode === "SPEED_TENZI";
+
+    return `Rolls: ${rollCount} ${
+      selectedGameModeNeedsTimer ? `| ${secondsElapsed}s` : ""
+    }`;
   },
 }));
