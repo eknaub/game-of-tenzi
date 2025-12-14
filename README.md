@@ -1,75 +1,117 @@
-# React + TypeScript + Vite
+# 🎲 Game of Tenzi
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, feature-rich implementation of the popular dice game Tenzi, built with React, TypeScript, and Material-UI. Challenge yourself with multiple game modes, modifiers, and compete on the leaderboard!
 
-Currently, two official plugins are available:
+![Game Preview](public/assets/game-preview.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🎮 What is Tenzi?
 
-## React Compiler
+Tenzi is a fast-paced dice game where players race to get all their dice to show the same number. This digital version expands on the classic game with 12 unique game modes and various modifiers that add new challenges and strategic depth.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## ✨ Features
 
-Note: This will impact Vite dev & build performances.
+### 🎯 12 Game Modes
 
-## Expanding the ESLint configuration
+**Classic & Speedy:**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Standard Tenzi** - Roll and hold until all dice show the same number
+- **Mega Tenzi** - Play with 20 dice instead of 10 for double the fun!
+- **High Roller** - Get all dice to show 6s only
+- **Low Roller** - Get all dice to show 1s only
+- **Speed Tenzi** - Race against the clock to match all dice
+- **Target Tenzi** - Declare a target number and match it with all dice
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+**Pattern & Logic:**
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Splitzi** - Get 5 dice showing one number and 5 showing another
+- **Odd/Even** - Roll until all dice show either odd or even numbers
+- **Missingzi** - Go for 9 of one number, leaving one die out
+- **Pairs Only** - Get 5 pairs of matching numbers
+- **Pyramid** - Get 1 die showing 1, 2 showing 2s, 3 showing 3s, 4 showing 4s
+- **Target Sum** - Achieve a specific sum with your dice
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+### 🔧 Game Modifiers
+
+- **Economy Mode** - Win in under 15 rolls for +50 pts bonus
+- **Giga Economy Mode** - Win in under 10 rolls for +100 pts bonus
+- **No Rerolls** - Dice stay locked once held for +60 pts bonus
+- **Competitive Mode** - Earn scores and compete on the leaderboard
+
+### 🏆 Leaderboard System
+
+- Track your best performances across all game modes
+- Compare scores with different modifier combinations
+- View roll count and time statistics
+
+## 🛠️ Tech Stack
+
+- **React 19** - Latest version with React Compiler enabled
+- **TypeScript** - Type-safe development
+- **Vite** - Lightning-fast build tool and dev server
+- **Material-UI (MUI)** - Beautiful, responsive UI components
+- **Zustand** - Lightweight state management
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone <repository-url>
+cd game-of-tenzi
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install dependencies:
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+npm install
 ```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+4. Open your browser and navigate to `http://localhost:5173`
+
+## 📜 Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build locally
+- `npm run lint` - Run ESLint for code quality
+
+## 🎲 How to Play
+
+1. **Choose Your Game Mode** - Select from 12 different game modes, each with unique win conditions
+2. **Add Modifiers** (Optional) - Increase the challenge with roll limits or competitive scoring
+3. **Start Rolling** - Click "Roll" to roll all unheld dice
+4. **Hold Dice** - Click on dice to hold them at their current value
+5. **Win** - Achieve the game mode's objective to win!
+6. **Compete** - Enable Competitive Mode to save your score to the leaderboard
+
+## 🎨 Key Features Implementation
+
+- **State Management**: Zustand stores handle game state and leaderboard data
+- **Responsive Design**: Fully responsive UI that works on mobile and desktop
+- **Score Calculation**: Dynamic scoring system based on game modes and modifiers
+- **Timer System**: Built-in timer for Speed Tenzi mode
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
+
+---
+
+Built with ❤️ using React and TypeScript
